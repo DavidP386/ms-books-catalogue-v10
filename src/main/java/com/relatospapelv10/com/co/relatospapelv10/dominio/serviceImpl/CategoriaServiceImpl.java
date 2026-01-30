@@ -135,7 +135,7 @@ public class CategoriaServiceImpl implements CategoriaService {
            respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_ID_NO_ENCONTRADO, false);
            respuestaDTO.setCategoriaDTO(null);
         }
-        
+         
         return respuestaDTO;
     }
     
