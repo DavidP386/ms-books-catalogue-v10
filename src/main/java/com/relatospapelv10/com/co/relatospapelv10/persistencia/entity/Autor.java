@@ -5,6 +5,8 @@ package com.relatospapelv10.com.co.relatospapelv10.persistencia.entity;
 import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 //import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Autor {
     
     //CAMPOS DE LA TABLA DE LA BASE DE DATOS:
     @Id//DECLARACIÓN DEL ID PRINCIPAL DE LA TABLA DE BASE DE DATOS.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//DECLARACIÓN DE LA GENERACIÓN AUTOMÁTICA DEL ID AUTOINCREMENTAL.
     
     //AQUI ES DONDE SE CREA EL ENLACE ENTRE LOS CAMPOS DE LA TABLA DE LA BASE DE DATOS Y LAS VARIABLES DECLARADAS
     //QUE RECIBIRAN O ENVIARAS LOS DATOS A LA BASE DE DATOS PARA LA ENTIDAD.

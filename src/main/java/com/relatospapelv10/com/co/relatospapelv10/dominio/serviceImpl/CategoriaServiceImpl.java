@@ -90,7 +90,6 @@ public class CategoriaServiceImpl implements CategoriaService {
     //CREAR REGISTRO:
     @Override//SOBREESCRIBIMOS EL METODO DE CREAR REGISTRO.
     public RespuestaDTO crearCategoria(CategoriaDTO categoriaDTO) {
-        Long maxIdCategoria = null;
         Categoria categoriaNombre = categoriaRepository.findByNombreCategoria(categoriaDTO.getNombreCategoria().toUpperCase());
         RespuestaDTO respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_NO_CREADO, false);
         
@@ -107,12 +106,7 @@ public class CategoriaServiceImpl implements CategoriaService {
            respuestaDTO.setCategoriaDTO(null);
         }
         if ((banderaNombreRegistroEncontrado==0) ) {//SI NO ENCONTRO EL NOMBRE DEL REGISTRO EN LA TABLA DE LA BASE DE DATOS CREA EL REGISTRO Y MUESTRA UN MENSAJE DE REGISTRO CREADO EXITOSAMENTE CON EL NOMBRE PROPORCIONADO.
-           maxIdCategoria = categoriaRepository.findMaxIdCategoria();
-           if (maxIdCategoria == null) {//ESTO SE HACE EN CASO DE QUE SI LA TABLA DE LA BASE DE DATOS ESTA EN BLANCO Y VA SER EL PRIMER REGISTRO AL OBTENER UN VALOR NULO, SE ASIGNE CERO (0) AUTOMÁTICAMENTE PORQUE SI NO ARROJARIA UN ERROR DE CONVERSIÓN DE CARACTER NULO AL SUMAR CON NÚMERO ENTERO.
-               maxIdCategoria = Long.valueOf(0);
-           }
-           categoriaDTO.setIdCategoria(maxIdCategoria + 1);//OBTENGO EL ID MAXIMO AUTOMATICO, SUMO (1) ENTERO PARA OBTENER EL NUEVO ID.
-           
+           categoriaDTO.setIdCategoria(null);//SE IGNORA EL ID ENVIADO PARA QUE LA BASE DE DATOS ASIGNE UNO NUEVO AUTOINCREMENTAL.
            categoriaRepository.save(categoriaDAO.categoria(categoriaDTO));
            respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_CREADO_EXITO, true);
         }
@@ -135,7 +129,7 @@ public class CategoriaServiceImpl implements CategoriaService {
            respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_ID_NO_ENCONTRADO, false);
            respuestaDTO.setCategoriaDTO(null);
         }
-
+        
         return respuestaDTO;
     }
     

@@ -94,12 +94,7 @@ public class AutorServiceImpl implements AutorService {
         //Optional<Autor> autorId = autorRepository.findByIdAutor(autorDTO.getIdAutor());
         RespuestaDTO respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_NO_CREADO, false);
         
-        maxIdAutor = autorRepository.findMaxIdAutor();
-        if (maxIdAutor==null) {//ESTO SE HACE EN CASO DE QUE SI LA TABLA DE LA BASE DE DATOS ESTA EN BLANCO Y VA SER EL PRIMER REGISTRO AL OBTENER UN VALOR NULO, SE ASIGNE CERO (0) AUTOMÁTICAMENTE PORQUE SI NO ARROJARIA UN ERROR DE CONVERSIÓN DE CARACTER NULO AL SUMAR CON NÚMERO ENTERO.
-           maxIdAutor=Long.valueOf(0);
-        }
-        autorDTO.setIdAutor(maxIdAutor+1);//OBTENGO EL ID MAXIMO AUTOMATICO, SUMO (1) ENTERO PARA OBTENER EL NUEVO ID.
-        
+        autorDTO.setIdAutor(null);//SE IGNORA EL ID ENVIADO PARA QUE LA BASE DE DATOS ASIGNE UNO NUEVO AUTOINCREMENTAL.
         autorRepository.save(autorDAO.autor(autorDTO));
         respuestaDTO = new RespuestaDTO(MensajesConstantes.MSG_REGISTRO_CREADO_EXITO, true);
         

@@ -15,9 +15,9 @@
 	<name>relatospapelv10</name>
 	<description>LIBRERIA RELATOS DE PAPEL V1.0</description>
 	<!--Cambiado el empaquetado de JAR a WAR.-->
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<properties>
-		<java.version>25</java.version>
+		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.8</spring-cloud.version>
 	</properties>
 	<dependencies>

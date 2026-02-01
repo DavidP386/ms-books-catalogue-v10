@@ -49,7 +49,4 @@ public interface CategoriaRepository extends JpaRepository<Categoria,Long> {
     Optional<Categoria> findByIdCategoria(Long idCategoria);
     
     Categoria findByNombreCategoria(String nombreCategoria);
-    
-    @Query(value = "SELECT MAX(id_categoria) FROM tbl_categorias", nativeQuery = true)
-    Long findMaxIdCategoria();
 }

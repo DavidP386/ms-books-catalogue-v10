@@ -3,6 +3,7 @@ package com.relatospapelv10.com.co.relatospapelv10.dominio.dto;
 
 //IMPORTACIÓN DE LIBRERIAS:
 import lombok.Data;
+import java.util.List;
 
 /**
 * @Autor HERNAN ADOLFO NUÑEZ GONZALEZ.
@@ -15,8 +16,11 @@ public class RespuestaDTO {
     //DECLARACIÓN DE LAS VARIABLES DE RESPUESTA DEL DTO:
     private AutorDTO autorDTO;
     private CategoriaDTO categoriaDTO;
+    private List<AutorDTO> autoresDTO;
+    private List<CategoriaDTO> categoriasDTO;
     private String mensaje;
     private boolean banderaexito;
+    private String status;
     
     //DECLARACIÓN DE LOS MÉTODOS SETTERS Y GETTERS DE LAS VARIABLES DE RESPUESTA DECLARADAS DEL DTO Y LOS MENSAJES GENERADOS POR LOS CRUDS
     //QUE SON LOS METODOS PARA LA CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
@@ -31,6 +35,26 @@ public class RespuestaDTO {
     }
     public void setCategoriaDTO(CategoriaDTO categoriaDTO) {
         this.categoriaDTO = categoriaDTO;
+    }
+    public List<AutorDTO> getAutoresDTO() {
+        return autoresDTO;
+    }
+    public void setAutoresDTO(List<AutorDTO> autoresDTO) {
+        this.autoresDTO = autoresDTO;
+    }
+    public List<CategoriaDTO> getCategoriasDTO() {
+        return categoriasDTO;
+    }
+    public void setCategoriasDTO(List<CategoriaDTO> categoriasDTO) {
+        this.categoriasDTO = categoriasDTO;
+    }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public RespuestaDTO() {
     }
     public RespuestaDTO(String mensaje, boolean banderaexito) {
         this.mensaje = mensaje;

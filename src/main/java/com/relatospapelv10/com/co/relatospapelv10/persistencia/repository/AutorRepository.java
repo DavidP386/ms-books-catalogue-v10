@@ -51,9 +51,4 @@ public interface AutorRepository extends JpaRepository<Autor,Long> {
     Slice<Autor> searchAutoresByKeywordOrderedByIdAscPag(Pageable pageable, @Param("keyword") String keyword);
     
     Optional<Autor> findByIdAutor(Long idAutor);
-    
-    //Autor findByNombresAutor(String nombresAutor);
-    
-    @Query(value = "SELECT MAX(id_autor) FROM tbl_autores", nativeQuery = true)
-    Long findMaxIdAutor();
 }

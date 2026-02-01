@@ -14,6 +14,7 @@ public class MensajesConstantes {
     public static final String MSG_REGISTRO_CREADO_EXITO = "Registro creado con éxito.";
     public static final String MSG_REGISTROS_CREADOS_EXITO = "Registros creados con éxito.";
     public static final String MSG_REGISTRO_CONSULTADO_EXITO = "Registro consultado con éxito.";
+    public static final String MSG_REGISTROS_LISTADOS_EXITO = "Registros listados con éxito.";
     public static final String MSG_REGISTRO_ACTUALIZADO_EXITO = "Registro actualizado con éxito.";
     public static final String MSG_REGISTROS_ACTUALIZADOS_EXITO = "Registros actualizados con éxito.";
     public static final String MSG_REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito.";
