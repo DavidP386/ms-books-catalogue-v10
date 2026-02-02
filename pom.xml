@@ -9,8 +9,8 @@
 		<!--<version>2.6.11</version>-->
 		<relativePath/>
 	</parent>
-	<groupId>com.relatospapelcatalogov10.mil.co.relatospapelcatalogov10</groupId>
-	<artifactId>relatospapelv10</artifactId>
+	<groupId>com.msbookscataloguev10.mil.co.msbookscataloguev10</groupId>
+	<artifactId>msbookscataloguev10</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>relatospapelv10</name>
 	<description>LIBRERIA RELATOS DE PAPEL CATALOGO V1.0</description>
