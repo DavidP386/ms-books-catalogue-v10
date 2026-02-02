@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 */
 @Component//DECLARACIÓN DEL COMPONENTE PARA LOS METODOS DEL DAO.
 public class LibroDAO {
-
+    
     @Autowired//INYECTAMOS EL DAO DE AUTOR.
     private AutorDAO autorDAO;
-
+    
     /**
     * @Autor HERNAN ADOLFO NUÑEZ GONZALEZ.
     * @Since 02/02/2026.
@@ -36,15 +36,15 @@ public class LibroDAO {
         libro.setFormatoLibro(libroDTO.getFormatoLibro());
         libro.setNombreArchivoImagenLibro(libroDTO.getNombreArchivoImagenLibro());
         libro.setEstadoLibro(libroDTO.getEstadoLibro().toUpperCase());
-
+        
         //MAPEAR EL AUTOR SI EXISTE EN EL DTO:
         if (libroDTO.getAutorDTO() != null) {
-            libro.setAutor(autorDAO.autor(libroDTO.getAutorDTO()));
+           libro.setAutor(autorDAO.autor(libroDTO.getAutorDTO()));
         }
-
+        
         return libro;
     }
-
+    
     /**
     * @Autor HERNAN ADOLFO NUÑEZ GONZALEZ.
     * @Since 02/02/2026.
@@ -63,12 +63,12 @@ public class LibroDAO {
         libroDTO.setFormatoLibro(libro.getFormatoLibro());
         libroDTO.setNombreArchivoImagenLibro(libro.getNombreArchivoImagenLibro());
         libroDTO.setEstadoLibro(libro.getEstadoLibro().toUpperCase());
-
+        
         //MAPEAR EL AUTOR SI EXISTE EN LA ENTIDAD:
         if (libro.getAutor() != null) {
-            libroDTO.setAutorDTO(autorDAO.autorDTO(libro.getAutor()));
+           libroDTO.setAutorDTO(autorDAO.autorDTO(libro.getAutor()));
         }
-
+        
         return libroDTO;
     }
 }
