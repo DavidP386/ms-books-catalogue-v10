@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 * Declaración del controlador.
 */
 @RestController//DECLARACIÓN DEL CONTROLADOR PARA LOS CRUDS.
-@RequestMapping("/libros")//DECLARACIÓN DE LA RESPUESTA PRINCIPAL DEL MAPEO DE LOS CRUDS.
 public class LibroController {
     
     @Autowired//INYECTAMOS EL SERVICIO.
@@ -30,7 +29,7 @@ public class LibroController {
     
     //1. LISTADO DE REGISTROS FILTRADOS.
     //LISTAR REGISTROS:
-    @GetMapping("/listAllLibros")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
+    @GetMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
     public ResponseEntity<RespuestaDTO> listarLibros(){
         RespuestaDTO respuesta = new RespuestaDTO();
         respuesta.setLibrosDTO(libroService.listarLibros());
@@ -90,7 +89,7 @@ public class LibroController {
     }
     
     //CREAR REGISTRO:
-    @PostMapping("/createLibro")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
+    @PostMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
     //@PutMapping("/createLibro")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
     public ResponseEntity<RespuestaDTO> crearLibro(@RequestBody LibroDTO libroDTO){
         System.out.println(libroDTO);
@@ -101,7 +100,7 @@ public class LibroController {
     }
     
     //LEER CONSULTA DE REGISTRO POR ID:
-    @GetMapping("/getLibrobyId/{idLibro}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
+    @GetMapping("/libros/{idLibro}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
     public ResponseEntity<RespuestaDTO> consultarLibrobyId(@PathVariable Long idLibro){
         RespuestaDTO respuesta = libroService.consultarLibroporId(idLibro);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
@@ -110,8 +109,10 @@ public class LibroController {
     }
     
     //MODIFICAR REGISTRO:
-    //@PostMapping("/updateLibro")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
-    @PutMapping("/updateLibro")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
+    //@PostMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
+
+    //MODIFICAR PARCIALMENTE EL REGISTRO:
+    @PutMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
     public ResponseEntity<RespuestaDTO> actualizarLibro(@RequestBody LibroDTO libroDTO){
         RespuestaDTO respuesta = libroService.actualizarLibro(libroDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
@@ -120,7 +121,7 @@ public class LibroController {
     }
     
     //ELIMINAR REGISTRO:
-    @DeleteMapping("/deleteLibro/{idLibro}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
+    @DeleteMapping("/libros/{idLibro}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
     public ResponseEntity<RespuestaDTO> eliminarLibro(@PathVariable Long idLibro){
         RespuestaDTO respuesta = libroService.eliminarLibro(idLibro);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
