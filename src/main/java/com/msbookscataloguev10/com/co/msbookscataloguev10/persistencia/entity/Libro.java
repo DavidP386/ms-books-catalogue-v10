@@ -33,8 +33,8 @@ public class Libro {
     @JoinColumn(name = "ID_AUTOR", columnDefinition = "BIGINT(20) NOT NULL")
     private Autor autor;
     
-    @Column(name = "ANIO_PUBLICACION_LIBRO", columnDefinition="INT(11) NOT NULL")
-    private int anioPublicacionLibro;
+    @Column(name = "FECHA_PUBLICACION_LIBRO", columnDefinition="DATE NOT NULL")
+    private String fechaPublicacionLibro;
     
     @Column(name = "SINOPSIS_LIBRO", columnDefinition="TEXT NOT NULL")
     private String sinopsisLibro;

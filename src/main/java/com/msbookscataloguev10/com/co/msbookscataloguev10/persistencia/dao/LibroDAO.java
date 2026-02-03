@@ -29,7 +29,7 @@ public class LibroDAO {
         Libro libro = new Libro();
         libro.setIdLibro(libroDTO.getIdLibro());
         libro.setTituloLibro(libroDTO.getTituloLibro().toUpperCase());
-        libro.setAnioPublicacionLibro(libroDTO.getAnioPublicacionLibro());
+        libro.setFechaPublicacionLibro(libroDTO.getFechaPublicacionLibro());
         libro.setSinopsisLibro(libroDTO.getSinopsisLibro());
         libro.setCodigoIsbnLibro(libroDTO.getCodigoIsbnLibro());
         libro.setPrecioLibro(libroDTO.getPrecioLibro());
@@ -56,7 +56,7 @@ public class LibroDAO {
         LibroDTO libroDTO = new LibroDTO();
         libroDTO.setIdLibro(libro.getIdLibro());
         libroDTO.setTituloLibro(libro.getTituloLibro().toUpperCase());
-        libroDTO.setAnioPublicacionLibro(libro.getAnioPublicacionLibro());
+        libroDTO.setFechaPublicacionLibro(libro.getFechaPublicacionLibro());
         libroDTO.setSinopsisLibro(libro.getSinopsisLibro());
         libroDTO.setCodigoIsbnLibro(libro.getCodigoIsbnLibro());
         libroDTO.setPrecioLibro(libro.getPrecioLibro());

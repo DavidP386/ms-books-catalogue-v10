@@ -17,7 +17,7 @@ public class LibroDTO {
     private Long idLibro;
     //private Long idAutor;
     private String tituloLibro;
-    private int anioPublicacionLibro;
+    private String fechaPublicacionLibro;
     private String sinopsisLibro;
     private String codigoIsbnLibro;
     private double precioLibro;
