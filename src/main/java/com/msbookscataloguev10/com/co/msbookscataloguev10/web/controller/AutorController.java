@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 * Declaración del controlador.
 */
 @RestController//DECLARACIÓN DEL CONTROLADOR PARA LOS CRUDS.
-@RequestMapping("/autores")//DECLARACIÓN DE LA RESPUESTA PRINCIPAL DEL MAPEO DE LOS CRUDS.
 public class AutorController {
     
     @Autowired//INYECTAMOS EL SERVICIO.
@@ -28,103 +27,52 @@ public class AutorController {
     
     //CONTROLADORES DE CRUDS (CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO).
     
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @GetMapping("/listAllAutores")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarAutores(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setAutoresDTO(autorService.listarAutores());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllAutoresOrderedbyIdAsc")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarAutoresOrdenadosporIdAsc(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setAutoresDTO(autorService.listarAutoresOrdenadosporIdAsc());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllAutoresOrderedbyIdAscPag")
-    public ResponseEntity<Slice<AutorDTO>> listarAutoresOrdenadosporIdAscPag(
+    //ENDPOINT ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR AUTORES CON QUERY PARAMS:
+    @GetMapping("/autores")
+    public ResponseEntity<Slice<AutorDTO>> listarAutores(
+           @RequestParam(required = false) String keyword,
+           @RequestParam(required = false) String orderBy,
+           @RequestParam(required = false, defaultValue = "asc") String orderMode,
            @RequestParam(defaultValue = "0") int page,
            @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Slice<AutorDTO> autoresSlice = autorService.listarAutoresOrdenadosporIdAscPag(pageable);
-        return new ResponseEntity<>(autoresSlice, HttpStatus.OK);
-    }
-    
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllAutoresbyKeywordAndOrderedbyIdAsc/{keyword}")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarAutoresporPalabraClaveyOrdenadosporIdAsc(@PathVariable String keyword){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setAutoresDTO(autorService.listarAutoresporPalabraClaveyOrdenadosporIdAsc(keyword));
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllAutoresbyKeywordAndOrderedbyIdAscPag/{keyword}")
-    public ResponseEntity<Slice<AutorDTO>> listarAutoresporPalabraClaveyOrdenadosporIdAscPag(
-           @RequestParam(name = "page", defaultValue = "0") int page,
-           @RequestParam(name = "size", defaultValue = "10") int size,
-           @PathVariable("keyword") String keyword
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Slice<AutorDTO> autoresSlice = autorService.listarAutoresporPalabraClaveyOrdenadosporIdAscPag(pageable, keyword);
+        Slice<AutorDTO> autoresSlice = autorService.listarAutores(keyword, orderBy, orderMode, pageable);
         return new ResponseEntity<>(autoresSlice, HttpStatus.OK);
     }
     
     //CREAR REGISTRO:
-    @PostMapping("/createAutor")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
+    @PostMapping("/autores")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
     //@PutMapping("/createAutor")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
     public ResponseEntity<RespuestaDTO> crearAutor(@RequestBody AutorDTO autorDTO){
         System.out.println(autorDTO);
         RespuestaDTO respuesta = autorService.crearAutor(autorDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //LEER CONSULTA DE REGISTRO POR ID:
-    @GetMapping("/getAutorbyId/{idAutor}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
+    @GetMapping("/autoresbyId/{idAutor}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
     public ResponseEntity<RespuestaDTO> consultarAutorbyId(@PathVariable Long idAutor){
         RespuestaDTO respuesta = autorService.consultarAutorporId(idAutor);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //MODIFICAR REGISTRO:
-    //@PostMapping("/updateAutor")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
-    @PutMapping("/updateAutor")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
-    public ResponseEntity<RespuestaDTO> actualizarAutor(@RequestBody AutorDTO autorDTO){
+    @PutMapping("/autores/{idAutor}")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
+    public ResponseEntity<RespuestaDTO> actualizarAutor(@PathVariable Long idAutor, @RequestBody AutorDTO autorDTO){
+        autorDTO.setIdAutor(idAutor);
         RespuestaDTO respuesta = autorService.actualizarAutor(autorDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //ELIMINAR REGISTRO:
-    @DeleteMapping("/deleteAutor/{idAutor}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
+    @DeleteMapping("/autores/{idAutor}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
     public ResponseEntity<RespuestaDTO> eliminarAutor(@PathVariable Long idAutor){
         RespuestaDTO respuesta = autorService.eliminarAutor(idAutor);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
 }

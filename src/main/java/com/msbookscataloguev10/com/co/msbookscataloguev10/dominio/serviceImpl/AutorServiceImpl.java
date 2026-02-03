@@ -32,58 +32,18 @@ public class AutorServiceImpl implements AutorService {
     @Autowired//INYECTAMOS EL REPOSITORIO.
     private AutorRepository autorRepository;
     
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<AutorDTO> listarAutores() {
-        List<Autor> autores = autorRepository.findAll();
-        List<AutorDTO> autorDTOS = new ArrayList<>();
+    //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR AUTORES:
+    @Override
+    public Slice<AutorDTO> listarAutores(String keyword, String orderBy, String orderMode, Pageable pageable) {
+        Slice<Autor> autores;
         
-        for (Autor autor : autores){
-            autorDTOS.add(autorDAO.autorDTO(autor));
+        //Si hay keyword, buscar con filtro; si no, listar todos.
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            autores = autorRepository.findAutoresByKeywordWithOrder(keyword, orderBy, orderMode, pageable);
+        } else {
+            autores = autorRepository.findAllAutoresWithOrder(orderBy, orderMode, pageable);
         }
         
-        return autorDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<AutorDTO> listarAutoresOrdenadosporIdAsc() {
-        List<Autor> autores = autorRepository.findAllAutoresOrderedByIdAsc();
-        List<AutorDTO> autorDTOS = new ArrayList<>();
-        
-        for (Autor autor : autores){
-            autorDTOS.add(autorDAO.autorDTO(autor));
-        }
-        
-        return autorDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<AutorDTO> listarAutoresOrdenadosporIdAscPag(Pageable pageable) {
-        Slice<Autor> autores = autorRepository.findAllAutoresOrderedByIdAscPag(pageable);
-        return autores.map(autor -> autorDAO.autorDTO(autor));
-    }
-    
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<AutorDTO> listarAutoresporPalabraClaveyOrdenadosporIdAsc(String keyword) {
-        List<Autor> autores = autorRepository.searchAutoresByKeywordOrderedByIdAsc(keyword);
-        List<AutorDTO> autorDTOS = new ArrayList<>();
-        
-        for (Autor autor : autores) {
-            autorDTOS.add(autorDAO.autorDTO(autor));
-        }
-        
-        return autorDTOS;
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<AutorDTO> listarAutoresporPalabraClaveyOrdenadosporIdAscPag(Pageable pageable, String keyword) {
-        Slice<Autor> autores = autorRepository.searchAutoresByKeywordOrderedByIdAscPag(pageable, keyword);
         return autores.map(autor -> autorDAO.autorDTO(autor));
     }
     

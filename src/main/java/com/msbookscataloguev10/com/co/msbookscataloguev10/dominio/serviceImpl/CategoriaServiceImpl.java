@@ -32,59 +32,40 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Autowired//INYECTAMOS EL REPOSITORIO.
     private CategoriaRepository categoriaRepository;
     
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<CategoriaDTO> listarCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
-        List<CategoriaDTO> categoriaDTOS = new ArrayList<>();
+    //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR CATEGORIAS:
+    @Override
+    public Slice<CategoriaDTO> listarCategorias(String keyword, String orderBy, String orderMode, Pageable pageable) {
+        Slice<Categoria> categorias;
         
-        for (Categoria categoria : categorias){
-            categoriaDTOS.add(categoriaDAO.categoriaDTO(categoria));
+        //Si hay keyword, buscar con filtro; si no, listar todos.
+        if (keyword != null && !keyword.trim().isEmpty()) {
+           categorias = categoriaRepository.findCategoriasByKeywordWithOrder(keyword, orderBy, orderMode, pageable);
+        } else {
+            categorias = categoriaRepository.findAllCategoriasWithOrder(orderBy, orderMode, pageable);
         }
         
-        return categoriaDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<CategoriaDTO> listarCategoriasOrdenadosporIdAsc() {
-        List<Categoria> categorias = categoriaRepository.findAllCategoriasOrderedByIdAsc();
-        List<CategoriaDTO> categoriaDTOS = new ArrayList<>();
-        
-        for (Categoria categoria : categorias){
-            categoriaDTOS.add(categoriaDAO.categoriaDTO(categoria));
-        }
-        
-        return categoriaDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<CategoriaDTO> listarCategoriasOrdenadosporIdAscPag(Pageable pageable) {
-        Slice<Categoria> categorias = categoriaRepository.findAllCategoriasOrderedByIdAscPag(pageable);
         return categorias.map(categoria -> categoriaDAO.categoriaDTO(categoria));
     }
     
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<CategoriaDTO> listarCategoriasporPalabraClaveyOrdenadosporIdAsc(String keyword) {
-        List<Categoria> categorias = categoriaRepository.searchCategoriasByKeywordOrderedByIdAsc(keyword);
-        List<CategoriaDTO> categoriaDTOS = new ArrayList<>();
+    //MÉTODO PARA LISTAR/FILTRAR/ORDENAR CATEGORIAS SIN PAGINACIÓN (PARA SELECTS):
+    @Override
+    public List<CategoriaDTO> listarCategoriasNoPaginacion(String keyword, String orderBy, String orderMode) {
+        List<Categoria> categorias;
         
+        //Si hay keyword, buscar con filtro; si no, listar todos.
+        if (keyword != null && !keyword.trim().isEmpty()) {
+           categorias = categoriaRepository.findCategoriasByKeywordWithOrderNoPagination(keyword, orderBy, orderMode);
+        } else {
+            categorias = categoriaRepository.findAllCategoriasWithOrderNoPagination(orderBy, orderMode);
+        }
+        
+        //Convertir entidades a DTOs.
+        List<CategoriaDTO> categoriaDTOS = new ArrayList<>();
         for (Categoria categoria : categorias) {
             categoriaDTOS.add(categoriaDAO.categoriaDTO(categoria));
         }
         
         return categoriaDTOS;
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<CategoriaDTO> listarCategoriasporPalabraClaveyOrdenadosporIdAscPag(Pageable pageable, String keyword) {
-        Slice<Categoria> categorias = categoriaRepository.searchCategoriasByKeywordOrderedByIdAscPag(pageable, keyword);
-        return categorias.map(categoria -> categoriaDAO.categoriaDTO(categoria));
     }
     
     //CREAR REGISTRO:

@@ -18,13 +18,8 @@ import java.util.List;
 public interface AutorService {
     //DECLARACIÓN DE LOS METODOS DE RESPUESTA EN LA INTERFACE PARA LOS CRUDS QUE SON LOS METODOS PARA LA
     //CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    List<AutorDTO> listarAutores();
-    List<AutorDTO> listarAutoresOrdenadosporIdAsc();
-    Slice<AutorDTO> listarAutoresOrdenadosporIdAscPag(Pageable pageable);
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    List<AutorDTO> listarAutoresporPalabraClaveyOrdenadosporIdAsc(String keyword);
-    Slice<AutorDTO> listarAutoresporPalabraClaveyOrdenadosporIdAscPag(Pageable pageable, String keyword);
+    //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR AUTORES:
+    Slice<AutorDTO> listarAutores(String keyword, String orderBy, String orderMode, Pageable pageable);
     RespuestaDTO crearAutor(AutorDTO autorDTO);
     RespuestaDTO consultarAutorporId(Long idAutor);
     RespuestaDTO actualizarAutor(AutorDTO autorDTO);

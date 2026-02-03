@@ -22,7 +22,6 @@ public class RespuestaDTO {
     private List<LibroDTO> librosDTO;
     private String mensaje;
     private boolean banderaexito;
-    private String status;
     
     //DECLARACIÓN DE LOS MÉTODOS SETTERS Y GETTERS DE LAS VARIABLES DE RESPUESTA DECLARADAS DEL DTO Y LOS MENSAJES GENERADOS POR LOS CRUDS
     //QUE SON LOS METODOS PARA LA CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
@@ -61,12 +60,6 @@ public class RespuestaDTO {
     }
     public void setLibrosDTO(List<LibroDTO> librosDTO) {
         this.librosDTO = librosDTO;
-    }
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
     }
     public RespuestaDTO() {
     }

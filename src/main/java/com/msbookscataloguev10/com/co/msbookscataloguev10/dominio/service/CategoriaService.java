@@ -18,13 +18,10 @@ import java.util.List;
 public interface CategoriaService {
     //DECLARACIÓN DE LOS METODOS DE RESPUESTA EN LA INTERFACE PARA LOS CRUDS QUE SON LOS METODOS PARA LA
     //CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    List<CategoriaDTO> listarCategorias();
-    List<CategoriaDTO> listarCategoriasOrdenadosporIdAsc();
-    Slice<CategoriaDTO> listarCategoriasOrdenadosporIdAscPag(Pageable pageable);
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    List<CategoriaDTO> listarCategoriasporPalabraClaveyOrdenadosporIdAsc(String keyword);
-    Slice<CategoriaDTO> listarCategoriasporPalabraClaveyOrdenadosporIdAscPag(Pageable pageable, String keyword);
+    //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR CATEGORIAS:
+    Slice<CategoriaDTO> listarCategorias(String keyword, String orderBy, String orderMode, Pageable pageable);
+    //MÉTODO PARA LISTAR/FILTRAR/ORDENAR CATEGORIAS SIN PAGINACIÓN (PARA SELECTS):
+    List<CategoriaDTO> listarCategoriasNoPaginacion(String keyword, String orderBy, String orderMode);
     RespuestaDTO crearCategoria(CategoriaDTO categoriaDTO);
     RespuestaDTO consultarCategoriaporId(Long idCategoria);
     RespuestaDTO consultarCategoriaporNombre(String nombreCategoria);

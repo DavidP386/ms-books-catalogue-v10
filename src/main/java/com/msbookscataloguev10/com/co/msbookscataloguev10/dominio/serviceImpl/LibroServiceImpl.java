@@ -32,58 +32,18 @@ public class LibroServiceImpl implements LibroService {
     @Autowired//INYECTAMOS EL REPOSITORIO.
     private LibroRepository libroRepository;
     
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<LibroDTO> listarLibros() {
-        List<Libro> libros = libroRepository.findAll();
-        List<LibroDTO> libroDTOS = new ArrayList<>();
+    //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR LIBROS:
+    @Override
+    public Slice<LibroDTO> listarLibros(String keyword, String orderBy, String orderMode, Pageable pageable) {
+        Slice<Libro> libros;
         
-        for (Libro libro : libros){
-            libroDTOS.add(libroDAO.libroDTO(libro));
+        //Si hay keyword, buscar con filtro; si no, listar todos.
+        if (keyword != null && !keyword.trim().isEmpty()) {
+           libros = libroRepository.findLibrosByKeywordWithOrder(keyword, orderBy, orderMode, pageable);
+        } else {
+            libros = libroRepository.findAllLibrosWithOrder(orderBy, orderMode, pageable);
         }
         
-        return libroDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<LibroDTO> listarLibrosOrdenadosporIdAsc() {
-        List<Libro> libros = libroRepository.findAllLibrosOrderedByIdAsc();
-        List<LibroDTO> libroDTOS = new ArrayList<>();
-        
-        for (Libro libro : libros){
-            libroDTOS.add(libroDAO.libroDTO(libro));
-        }
-        
-        return libroDTOS;
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<LibroDTO> listarLibrosOrdenadosporIdAscPag(Pageable pageable) {
-        Slice<Libro> libros = libroRepository.findAllLibrosOrderedByIdAscPag(pageable);
-        return libros.map(libro -> libroDAO.libroDTO(libro));
-    }
-    
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public List<LibroDTO> listarLibrosporPalabraClaveyOrdenadosporIdAsc(String keyword) {
-        List<Libro> libros = libroRepository.searchLibrosByKeywordOrderedByIdAsc(keyword);
-        List<LibroDTO> libroDTOS = new ArrayList<>();
-        
-        for (Libro libro : libros) {
-            libroDTOS.add(libroDAO.libroDTO(libro));
-        }
-        
-        return libroDTOS;
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @Override//SOBREESCRIBIMOS EL METODO DE LISTAR REGISTROS.
-    public Slice<LibroDTO> listarLibrosporPalabraClaveyOrdenadosporIdAscPag(Pageable pageable, String keyword) {
-        Slice<Libro> libros = libroRepository.searchLibrosByKeywordOrderedByIdAscPag(pageable, keyword);
         return libros.map(libro -> libroDAO.libroDTO(libro));
     }
     

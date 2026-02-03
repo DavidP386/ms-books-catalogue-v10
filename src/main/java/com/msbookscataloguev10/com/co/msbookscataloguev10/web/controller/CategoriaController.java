@@ -2,7 +2,6 @@
 package com.msbookscataloguev10.com.co.msbookscataloguev10.web.controller;
 
 //IMPORTACIÓN DE LIBRERIAS:
-import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.Constantes.MensajesConstantes;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.dto.RespuestaDTO;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.dto.CategoriaDTO;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.service.CategoriaService;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 /**
 * @Autor HERNAN ADOLFO NUÑEZ GONZALEZ.
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 * Declaración del controlador.
 */
 @RestController//DECLARACIÓN DEL CONTROLADOR PARA LOS CRUDS.
-@RequestMapping("/categorias")//DECLARACIÓN DE LA RESPUESTA PRINCIPAL DEL MAPEO DE LOS CRUDS.
 public class CategoriaController {
     
     @Autowired//INYECTAMOS EL SERVICIO.
@@ -28,119 +27,71 @@ public class CategoriaController {
     
     //CONTROLADORES DE CRUDS (CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO).
     
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @GetMapping("/listAllCategorias")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarCategorias(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setCategoriasDTO(categoriaService.listarCategorias());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllCategoriasOrderedbyIdAsc")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarCategoriasOrdenadosporIdAsc(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setCategoriasDTO(categoriaService.listarCategoriasOrdenadosporIdAsc());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllCategoriasOrderedbyIdAscPag")
-    public ResponseEntity<Slice<CategoriaDTO>> listarCategoriasOrdenadosporIdAscPag(
+    //ENDPOINT ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR CATEGORIAS CON QUERY PARAMS:
+    @GetMapping("/categorias")
+    public ResponseEntity<Slice<CategoriaDTO>> listarCategorias(
+           @RequestParam(required = false) String keyword,
+           @RequestParam(required = false) String orderBy,
+           @RequestParam(required = false, defaultValue = "asc") String orderMode,
            @RequestParam(defaultValue = "0") int page,
            @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Slice<CategoriaDTO> categoriasSlice = categoriaService.listarCategoriasOrdenadosporIdAscPag(pageable);
+        Slice<CategoriaDTO> categoriasSlice = categoriaService.listarCategorias(keyword, orderBy, orderMode, pageable);
         return new ResponseEntity<>(categoriasSlice, HttpStatus.OK);
     }
     
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllCategoriasbyKeywordAndOrderedbyIdAsc/{keyword}")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarCategoriasporPalabraClaveyOrdenadosporIdAsc(@PathVariable String keyword){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setCategoriasDTO(categoriaService.listarCategoriasporPalabraClaveyOrdenadosporIdAsc(keyword));
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllCategoriasbyKeywordAndOrderedbyIdAscPag/{keyword}")
-    public ResponseEntity<Slice<CategoriaDTO>> listarCategoriasporPalabraClaveyOrdenadosporIdAscPag(
-           @RequestParam(name = "page", defaultValue = "0") int page,
-           @RequestParam(name = "size", defaultValue = "10") int size,
-           @PathVariable("keyword") String keyword
+    //ENDPOINT PARA LISTAR CATEGORIAS SIN PAGINACIÓN (PARA SELECTS DEL FRONTEND):
+    @GetMapping("/categorias/lista")
+    public ResponseEntity<List<CategoriaDTO>> listarCategoriasNoPaginacion(
+           @RequestParam(required = false) String keyword,
+           @RequestParam(required = false) String orderBy,
+           @RequestParam(required = false, defaultValue = "asc") String orderMode
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Slice<CategoriaDTO> categoriasSlice = categoriaService.listarCategoriasporPalabraClaveyOrdenadosporIdAscPag(pageable, keyword);
-        return new ResponseEntity<>(categoriasSlice, HttpStatus.OK);
+        List<CategoriaDTO> categoriasList = categoriaService.listarCategoriasNoPaginacion(keyword, orderBy, orderMode);
+        return new ResponseEntity<>(categoriasList, HttpStatus.OK);
     }
     
     //CREAR REGISTRO:
-    @PostMapping("/createCategoria")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
-    //@PutMapping("/createCategoria")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
+    @PostMapping("/categorias")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
+    //@PutMapping("/categorias")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
     public ResponseEntity<RespuestaDTO> crearCategoria(@RequestBody CategoriaDTO categoriaDTO){
         System.out.println(categoriaDTO);
         RespuestaDTO respuesta = categoriaService.crearCategoria(categoriaDTO);
-        HttpStatus httpStatus;
-        if (respuesta.isBanderaexito()) {
-            httpStatus = HttpStatus.CREATED;
-        } else if (MensajesConstantes.MSG_REGISTRO_NOMBRE_YA_EXISTE.equals(respuesta.getMensaje())) {
-            httpStatus = HttpStatus.CONFLICT;
-        } else {
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
+        HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //LEER CONSULTA DE REGISTRO POR ID:
-    @GetMapping("/getCategoriabyId/{idCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
+    @GetMapping("/categoriasbyId/{idCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
     public ResponseEntity<RespuestaDTO> consultarCategoriabyId(@PathVariable Long idCategoria){
         RespuestaDTO respuesta = categoriaService.consultarCategoriaporId(idCategoria);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //LEER CONSULTA DE REGISTRO POR NOMBRE:
-    @GetMapping("/getCategoriabyNombre/{nombreCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
+    @GetMapping("/categoriasbyNombre/{nombreCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD CONSULTAR REGISTRO.
     public ResponseEntity<RespuestaDTO> consultarCategoriabyNombre(@PathVariable String nombreCategoria){
         RespuestaDTO respuesta = categoriaService.consultarCategoriaporNombre(nombreCategoria);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //MODIFICAR REGISTRO:
-    //@PostMapping("/updateCategoria")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
-    @PutMapping("/updateCategoria")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
-    public ResponseEntity<RespuestaDTO> actualizarCategoria(@RequestBody CategoriaDTO categoriaDTO){
+    @PutMapping("/categorias/{idCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
+    public ResponseEntity<RespuestaDTO> actualizarCategoria(@PathVariable Long idCategoria, @RequestBody CategoriaDTO categoriaDTO){
+        categoriaDTO.setIdCategoria(idCategoria);
         RespuestaDTO respuesta = categoriaService.actualizarCategoria(categoriaDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //ELIMINAR REGISTRO:
-    @DeleteMapping("/deleteCategoria/{idCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
+    @DeleteMapping("/categorias/{idCategoria}")//DECLARACIÓN DEL MAPEO DEL CRUD ELIMINAR REGISTRO.
     public ResponseEntity<RespuestaDTO> eliminarCategoria(@PathVariable Long idCategoria){
         RespuestaDTO respuesta = categoriaService.eliminarCategoria(idCategoria);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
 }

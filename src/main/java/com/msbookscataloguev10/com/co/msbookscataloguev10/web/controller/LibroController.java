@@ -26,65 +26,18 @@ public class LibroController {
     private LibroService libroService;
     
     //CONTROLADORES DE CRUDS (CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO).
-    
-    //1. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS:
-    @GetMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarLibros(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setLibrosDTO(libroService.listarLibros());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllLibrosOrderedbyIdAsc")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarLibrosOrdenadosporIdAsc(){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setLibrosDTO(libroService.listarLibrosOrdenadosporIdAsc());
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllLibrosOrderedbyIdAscPag")
-    public ResponseEntity<Slice<LibroDTO>> listarLibrosOrdenadosporIdAscPag(
+
+    //ENDPOINT ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR LIBROS CON QUERY PARAMS:
+    @GetMapping("/libros")
+    public ResponseEntity<Slice<LibroDTO>> listarLibros(
+           @RequestParam(required = false) String keyword,
+           @RequestParam(required = false) String orderBy,
+           @RequestParam(required = false, defaultValue = "asc") String orderMode,
            @RequestParam(defaultValue = "0") int page,
            @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Slice<LibroDTO> librosSlice = libroService.listarLibrosOrdenadosporIdAscPag(pageable);
-        return new ResponseEntity<>(librosSlice, HttpStatus.OK);
-    }
-    
-    //2. LISTADO DE REGISTROS FILTRADOS.
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE:
-    @GetMapping("/listAllLibrosbyKeywordAndOrderedbyIdAsc/{keyword}")//DECLARACIÓN DEL MAPEO DEL CRUD LISTAR REGISTROS.
-    public ResponseEntity<RespuestaDTO> listarLibrosporPalabraClaveyOrdenadosporIdAsc(@PathVariable String keyword){
-        RespuestaDTO respuesta = new RespuestaDTO();
-        respuesta.setLibrosDTO(libroService.listarLibrosporPalabraClaveyOrdenadosporIdAsc(keyword));
-        respuesta.setMensaje(MensajesConstantes.MSG_REGISTROS_LISTADOS_EXITO);
-        respuesta.setBanderaexito(true);
-        HttpStatus httpStatus = HttpStatus.OK;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
-        return new ResponseEntity<>(respuesta, httpStatus);
-    }
-    
-    //LISTAR REGISTROS FILTRADOS POR PALABRA CLAVE Y ORDENADOS POR ID DE FORMA ASCENDENTE CON PAGINACIÓN:
-    @GetMapping("/listAllLibrosbyKeywordAndOrderedbyIdAscPag/{keyword}")
-    public ResponseEntity<Slice<LibroDTO>> listarLibrosporPalabraClaveyOrdenadosporIdAscPag(
-           @RequestParam(name = "page", defaultValue = "0") int page,
-           @RequestParam(name = "size", defaultValue = "10") int size,
-           @PathVariable("keyword") String keyword
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Slice<LibroDTO> librosSlice = libroService.listarLibrosporPalabraClaveyOrdenadosporIdAscPag(pageable, keyword);
+        Slice<LibroDTO> librosSlice = libroService.listarLibros(keyword, orderBy, orderMode, pageable);
         return new ResponseEntity<>(librosSlice, HttpStatus.OK);
     }
     
@@ -95,7 +48,6 @@ public class LibroController {
         System.out.println(libroDTO);
         RespuestaDTO respuesta = libroService.crearLibro(libroDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
@@ -104,19 +56,15 @@ public class LibroController {
     public ResponseEntity<RespuestaDTO> consultarLibrobyId(@PathVariable Long idLibro){
         RespuestaDTO respuesta = libroService.consultarLibroporId(idLibro);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
     //MODIFICAR REGISTRO:
-    //@PostMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
-
-    //MODIFICAR PARCIALMENTE EL REGISTRO:
-    @PutMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
-    public ResponseEntity<RespuestaDTO> actualizarLibro(@RequestBody LibroDTO libroDTO){
+    @PutMapping("/libros/{idLibro}")//DECLARACIÓN DEL MAPEO DEL CRUD MODIFICAR REGISTRO.
+    public ResponseEntity<RespuestaDTO> actualizarLibro(@PathVariable Long idLibro, @RequestBody LibroDTO libroDTO){
+        libroDTO.setIdLibro(idLibro);
         RespuestaDTO respuesta = libroService.actualizarLibro(libroDTO);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
     
@@ -125,7 +73,6 @@ public class LibroController {
     public ResponseEntity<RespuestaDTO> eliminarLibro(@PathVariable Long idLibro){
         RespuestaDTO respuesta = libroService.eliminarLibro(idLibro);
         HttpStatus httpStatus = respuesta.isBanderaexito() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        respuesta.setStatus(httpStatus.value() + " " + httpStatus.getReasonPhrase());
         return new ResponseEntity<>(respuesta, httpStatus);
     }
 }
