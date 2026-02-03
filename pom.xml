@@ -12,7 +12,7 @@
 	<groupId>com.msbookscataloguev10.mil.co.msbookscataloguev10</groupId>
 	<artifactId>msbookscataloguev10</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>relatospapelv10</name>
+	<name>msbookscataloguev10</name>
 	<description>LIBRERIA RELATOS DE PAPEL CATALOGO V1.0</description>
 	<!--Cambiado el empaquetado de JAR a WAR.-->
 	<packaging>jar</packaging>
