@@ -8,14 +8,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/inventarios")
+@Tag(
+    name = "Kardex / Inventarios",
+    description = "Gestión de entradas, salidas y kardex de libros"
+)
 public class InventarioController {
 
   @Autowired
   private InventarioService inventarioService;
 
+  @Operation(
+      summary = "Obtener kardex de un libro",
+      description = "Devuelve todos los movimientos de inventario (entradas y salidas) de un libro"
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Kardex obtenido correctamente"),
+      @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+  })
   @GetMapping("/kardex/{idLibro}")
   public ResponseEntity<List<InventarioDTO>> listarKardex(@PathVariable Long idLibro){
     List<InventarioDTO> inventariosSlice = inventarioService.listarKardex(idLibro);
@@ -23,12 +41,27 @@ public class InventarioController {
     return new ResponseEntity<>(inventariosSlice, HttpStatus.OK);
   }
 
+  @Operation(
+      summary = "Registrar entrada de inventario",
+      description = "Registra una entrada de stock para un libro"
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Entrada registrada correctamente")
+  })
   @PostMapping("/entrada")
   public ResponseEntity<Void> registrarEntrada(@RequestBody InventarioDTO inventarioDTO) {
     inventarioService.registrarEntrada(inventarioDTO);
     return ResponseEntity.ok().build();
   }
 
+  @Operation(
+      summary = "Registrar salida de inventario",
+      description = "Registra una salida de stock. Falla si no hay stock suficiente"
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Salida registrada correctamente"),
+      @ApiResponse(responseCode = "409", description = "Stock insuficiente")
+  })
   @PostMapping("/salida")
   public ResponseEntity<String> registrarSalida(@RequestBody InventarioDTO inventarioDTO) {
     try {
