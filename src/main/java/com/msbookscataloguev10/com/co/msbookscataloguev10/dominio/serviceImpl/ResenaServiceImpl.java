@@ -41,7 +41,8 @@ public class ResenaServiceImpl implements ResenaService {
 
     @Override
     public void actualizarResena(ResenaDTO resenaDTO) {
-        Optional<Resena> resenaOptional = resenaRepository.findById(resenaDTO.getIdResena());
+        Optional<Resena> resenaOptional =
+                resenaRepository.findById(resenaDTO.getIdResena());
         if (resenaOptional.isEmpty()) {
             throw new IllegalStateException("La reseña no existe");
         }

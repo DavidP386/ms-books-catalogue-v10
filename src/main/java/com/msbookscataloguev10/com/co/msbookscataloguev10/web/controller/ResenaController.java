@@ -39,11 +39,28 @@ public class ResenaController {
         return resenaService.consultarCalificacion(idLibro);
     }
 
+    @Operation(
+            summary = "Crea una reseña",
+            description = "Crea la reseña con el cuerpo JSON enviado"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reseña creada")
+    })
+
     @PostMapping
     public ResponseEntity<Void> crearResena(@RequestBody ResenaDTO resenaDTO){
         resenaService.crearResena(resenaDTO);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(
+            summary = "Consultar reseña por Id",
+            description = "Consulta la reseña por el Id de la reseña"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reseña obtenida correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron reseñas con el id ingresado")
+    })
 
     @GetMapping("/{idResena}")
     public ResponseEntity<ResenaDTO> consultarResenaporId(@PathVariable Long idResena){
@@ -55,6 +72,13 @@ public class ResenaController {
         }
     }
 
+    @Operation(
+            summary = "Actualizar reseña",
+            description = "Actualizar reseña con Id y cuerpo de JSON enviado"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reseña actualizada correctamente"),
+    })
     @PutMapping("/{idResena}")
     public ResponseEntity<Void> actualizarResena(@PathVariable Long idResena, @RequestBody ResenaDTO resenaDTO) {
         resenaDTO.setIdResena(idResena);
@@ -62,6 +86,14 @@ public class ResenaController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "Eliminar reseña",
+            description = "Elimina la reseña por el Id de la reseña"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reseña eliminada correctamente"),
+            @ApiResponse(responseCode = "404", description = "La reseña no existe")
+    })
     @DeleteMapping("/{idResena}")
     public ResponseEntity<Void> eliminarResena(@PathVariable Long idResena){
         try {
