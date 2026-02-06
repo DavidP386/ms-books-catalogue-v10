@@ -21,6 +21,7 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
         ), 0)
         FROM Inventario i
         WHERE i.libro.idLibro = :idLibro
+          AND i.libro.estadoLibro = 'VISIBLE'
     """)
   Integer calcularStockActual(@Param("idLibro") Long idLibro);
 
