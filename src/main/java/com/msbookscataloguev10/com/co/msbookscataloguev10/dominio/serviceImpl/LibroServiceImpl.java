@@ -61,6 +61,11 @@ public class LibroServiceImpl implements LibroService {
     public Slice<LibroDTO> listarLibros(
             String keyword,
             String titulo,
+            String sinopsisLibro,
+            String codigoIsbnLibro,
+            String formatoLibro,
+            String estadoLibro,
+            String fechaPublicacionLibro,
             Long idCategoria,
             String nombreCategoria,
             Long idAutor,
@@ -80,6 +85,11 @@ public class LibroServiceImpl implements LibroService {
 
         // filtros combinables (AND)
         spec = spec.and(LibroSpecifications.tituloContiene(titulo))
+                .and(LibroSpecifications.sinopsisContiene(sinopsisLibro))
+                .and(LibroSpecifications.isbnContiene(codigoIsbnLibro))
+                .and(LibroSpecifications.formatoEs(formatoLibro))
+                .and(LibroSpecifications.estadoEs(estadoLibro))
+                .and(LibroSpecifications.fechaPublicacionEs(fechaPublicacionLibro))
                 .and(LibroSpecifications.categoriaIdEs(idCategoria))
                 .and(LibroSpecifications.categoriaNombreContiene(nombreCategoria))
                 .and(LibroSpecifications.autorIdEs(idAutor))
