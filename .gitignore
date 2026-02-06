@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Librerías JAR (Maven las maneja automáticamente) ###
+src/main/webapp/WEB-INF/lib/*.jar
+
+### Archivos de log y errores ###
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+### Backup de Git ###
+.git_backup/
+
+### Claude Code ###
+.claude/
