@@ -24,6 +24,11 @@ public interface LibroService {
     Slice<LibroDTO> listarLibros(
             String keyword,
             String titulo,
+            String sinopsisLibro,
+            String codigoIsbnLibro,
+            String formatoLibro,
+            String estadoLibro,
+            String fechaPublicacionLibro,
             Long idCategoria,
             String nombreCategoria,
             Long idAutor,

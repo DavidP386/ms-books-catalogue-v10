@@ -108,5 +108,44 @@ public class LibroSpecifications {
             );
         };
     }
+    // Filtro por sinopsis (LIKE)
+    public static Specification<Libro> sinopsisContiene(String sinopsis) {
+        return (root, query, cb) -> {
+            if (sinopsis == null || sinopsis.trim().isEmpty()) return cb.conjunction();
+            return cb.like(cb.upper(root.get("sinopsisLibro")), "%" + sinopsis.trim().toUpperCase() + "%");
+        };
+    }
 
+    // Filtro por ISBN (LIKE o exacto, tú decides; aquí LIKE)
+    public static Specification<Libro> isbnContiene(String isbn) {
+        return (root, query, cb) -> {
+            if (isbn == null || isbn.trim().isEmpty()) return cb.conjunction();
+            return cb.like(cb.upper(root.get("codigoIsbnLibro")), "%" + isbn.trim().toUpperCase() + "%");
+        };
+    }
+
+    // Filtro por formato (EQUAL)
+    public static Specification<Libro> formatoEs(String formato) {
+        return (root, query, cb) -> {
+            if (formato == null || formato.trim().isEmpty()) return cb.conjunction();
+            return cb.equal(cb.upper(root.get("formatoLibro")), formato.trim().toUpperCase());
+        };
+    }
+
+    // Filtro por estado (EQUAL)
+    public static Specification<Libro> estadoEs(String estado) {
+        return (root, query, cb) -> {
+            if (estado == null || estado.trim().isEmpty()) return cb.conjunction();
+            return cb.equal(cb.upper(root.get("estadoLibro")), estado.trim().toUpperCase());
+        };
+    }
+
+    // Filtro por fechaPublicacion (EQUAL)
+// (OJO: en tu entity es String, no Date)
+    public static Specification<Libro> fechaPublicacionEs(String fecha) {
+        return (root, query, cb) -> {
+            if (fecha == null || fecha.trim().isEmpty()) return cb.conjunction();
+            return cb.equal(root.get("fechaPublicacionLibro"), fecha.trim());
+        };
+    }
 }

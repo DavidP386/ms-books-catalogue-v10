@@ -33,6 +33,13 @@ public class LibroController {
     public ResponseEntity<Slice<LibroDTO>> listarLibros(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String titulo,
+
+            @RequestParam(required = false) String sinopsisLibro,
+            @RequestParam(required = false) String codigoIsbnLibro,
+            @RequestParam(required = false) String formatoLibro,
+            @RequestParam(required = false) String estadoLibro,
+            @RequestParam(required = false) String fechaPublicacionLibro,
+
             @RequestParam(required = false) Long idCategoria,
             @RequestParam(required = false) String nombreCategoria,          // <-- NUEVO
             @RequestParam(required = false) Long idAutor,
@@ -49,11 +56,12 @@ public class LibroController {
         Pageable pageable = PageRequest.of(page, size);
 
         Slice<LibroDTO> librosSlice = libroService.listarLibros(
-                keyword, titulo, idCategoria, nombreCategoria, idAutor,
+                keyword, titulo,
+                sinopsisLibro, codigoIsbnLibro, formatoLibro, estadoLibro, fechaPublicacionLibro,
+                idCategoria, nombreCategoria, idAutor,
                 nombresAutor, primerApellidoAutor, segundoApellidoAutor,
                 minPrecio, maxPrecio, orderBy, orderMode, pageable
         );
-
         if (librosSlice == null || librosSlice.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
