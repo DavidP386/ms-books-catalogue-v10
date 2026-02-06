@@ -12,7 +12,7 @@ import java.util.List;
  * @Autor PD04. HERNAN ADOLFO NUÑEZ GONZALEZ.
  * @Since 02/02/2026.
  * Declaración de la entidad.
- * @Actualizacion David Paez 04/02/2026.
+ * @Actualizacion David Paez 06/02/2026.
 * Declaración de los métodos de respuesta en la interface para los cruds (creación, lectura (listar y consultar),
 * edición y eliminación de un registro).
 */
@@ -21,8 +21,21 @@ public interface LibroService {
     //DECLARACIÓN DE LOS METODOS DE RESPUESTA EN LA INTERFACE PARA LOS CRUDS QUE SON LOS METODOS PARA LA
     //CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
     //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR LIBROS:
-    Slice<LibroDTO> listarLibros(String keyword, Long idCategoria, String orderBy, String orderMode, Pageable pageable);
-    
+    Slice<LibroDTO> listarLibros(
+            String keyword,
+            String titulo,
+            Long idCategoria,
+            String nombreCategoria,
+            Long idAutor,
+            String nombresAutor,
+            String primerApellidoAutor,
+            String segundoApellidoAutor,
+            Double minPrecio,
+            Double maxPrecio,
+            String orderBy,
+            String orderMode,
+            Pageable pageable
+    );
     //MÉTODO PARA BUSCAR LIBROS POR CRITERIOS INDIVIDUALES Y COMBINADOS:
     Slice<LibroDTO> buscarLibrosPorCriterios(
             String tituloLibro,
