@@ -22,11 +22,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.msbookscataloguev10.com.co.msbookscataloguev10.persistencia.specification.LibroSpecifications;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
+
+
+
 /**
  * @Autor PD04. HERNAN ADOLFO NUÑEZ GONZALEZ.
  * @Since 02/02/2026.
  * Declaración de la entidad.
- * @Actualizacion David Paez 04/02/2026.
+ * @Actualizacion David Paez 06/02/2026.
 * Esta es la declaración de la implementación del servicio.
 * Se inyectan DAOS y repositorios.
 */
@@ -48,26 +56,46 @@ public class LibroServiceImpl implements LibroService {
     private AutorRepository autorRepository;
     
     //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR LIBROS:
-    
+
     @Override
-    public Slice<LibroDTO> listarLibros(String keyword, Long idCategoria, String orderBy, String orderMode, Pageable pageable) {
-        
-        Slice<Libro> libros;
-        
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
-        boolean hasCategoria = idCategoria != null;
-        
-        if (hasKeyword && hasCategoria) {
-            libros = libroRepository.findLibrosByKeywordAndCategoriaWithOrder(keyword, idCategoria, orderBy, orderMode, pageable);
-        } else if (hasKeyword) {
-            libros = libroRepository.findLibrosByKeywordWithOrder(keyword, orderBy, orderMode, pageable);
-        } else if (hasCategoria) {
-            libros = libroRepository.findLibrosByCategoriaWithOrder(idCategoria, orderBy, orderMode, pageable);
-        } else {
-            libros = libroRepository.findAllLibrosWithOrder(orderBy, orderMode, pageable);
-        }
-        
-        return libros.map(libro -> libroDAO.libroDTO(libro));
+    public Slice<LibroDTO> listarLibros(
+            String keyword,
+            String titulo,
+            Long idCategoria,
+            String nombreCategoria,
+            Long idAutor,
+            String nombresAutor,
+            String primerApellidoAutor,
+            String segundoApellidoAutor,
+            Double minPrecio,
+            Double maxPrecio,
+            String orderBy,
+            String orderMode,
+            Pageable pageable
+    ) {
+        Specification<Libro> spec = Specification.where(null);
+
+        // keyword opcional (si lo quieres mantener)
+        spec = spec.and(LibroSpecifications.keywordEnLibro(keyword));
+
+        // filtros combinables (AND)
+        spec = spec.and(LibroSpecifications.tituloContiene(titulo))
+                .and(LibroSpecifications.categoriaIdEs(idCategoria))
+                .and(LibroSpecifications.categoriaNombreContiene(nombreCategoria))
+                .and(LibroSpecifications.autorIdEs(idAutor))
+                .and(LibroSpecifications.autorNombresContiene(nombresAutor))
+                .and(LibroSpecifications.autorPrimerApellidoContiene(primerApellidoAutor))
+                .and(LibroSpecifications.autorSegundoApellidoContiene(segundoApellidoAutor))
+                .and(LibroSpecifications.precioMayorOIgual(minPrecio))
+                .and(LibroSpecifications.precioMenorOIgual(maxPrecio));
+
+        Sort sort = buildSort(orderBy, orderMode);
+        Pageable pageableSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<Libro> page = libroRepository.findAll(spec, pageableSort);
+
+        // tu DAO ya devuelve autorDTO y categorias en response
+        return page.map(libro -> libroDAO.libroDTO(libro));
     }
     
     //MÉTODO PARA LISTAR LIBROS POR CRITERIOS INDIVIDUALES Y COMBINADOS:
@@ -262,5 +290,26 @@ public class LibroServiceImpl implements LibroService {
         libroRepository.save(libro);
         
         return new RespuestaDTO("CATEGORIAS REEMPLAZADAS CORRECTAMENTE", true);
+    }
+    private Sort buildSort(String orderBy, String orderMode) {
+        Sort.Direction dir = "desc".equalsIgnoreCase(orderMode)
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        // default: ordenar por idLibro
+        if (orderBy == null || orderBy.isBlank() || "id".equalsIgnoreCase(orderBy)) {
+            return Sort.by(dir, "idLibro");
+        }
+
+        switch (orderBy.toLowerCase()) {
+            case "titulo":
+                return Sort.by(dir, "tituloLibro");
+            case "fecha":
+                return Sort.by(dir, "fechaPublicacionLibro");
+            case "precio":
+                return Sort.by(dir, "precioLibro");
+            default:
+                return Sort.by(dir, "idLibro");
+        }
     }
 }

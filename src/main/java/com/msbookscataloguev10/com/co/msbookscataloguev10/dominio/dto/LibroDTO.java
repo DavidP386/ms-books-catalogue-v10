@@ -5,12 +5,15 @@ package com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 
 /**
  * @Autor PD04. HERNAN ADOLFO NUÑEZ GONZALEZ.
  * @Since 02/02/2026.
  * Declaración de la entidad.
- * @Actualizacion David Paez 04/02/2026.
+ * @Actualizacion David Paez 07/02/2026.
  */
 @Data//DECLARACIÓN DE LA DATA PARA LOS DATOS DE LA TABLA DE LA BASE DE DATOS PARA LOS DTO.
 //Anotacion de lombok que me crea automaticamente los get, set constructor.
@@ -40,6 +43,8 @@ public class LibroDTO {
     private AutorDTO autorDTO;
     
     //IDS PARA ASIGNAR CATEGORIAS (REQUEST)
+
+    @JsonIgnore
     private List<Long> categoriasIds;
     
     //CATEGORIAS COMPLETAS (RESPONSE)

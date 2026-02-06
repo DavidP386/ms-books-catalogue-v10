@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-* @Autor HERNAN ADOLFO NUÑEZ GONZALEZ.
-* @Since 02/02/2026.
-* Declaración del controlador.
+ * @Autor PD04. HERNAN ADOLFO NUÑEZ GONZALEZ.
+ * @Since 02/02/2026.
+ * Declaración de la entidad.
+ * @Actualizacion David Paez 06/02/2026.
 */
 @RestController//DECLARACIÓN DEL CONTROLADOR PARA LOS CRUDS.
 public class LibroController {
@@ -31,14 +32,32 @@ public class LibroController {
     @GetMapping("/libros")
     public ResponseEntity<Slice<LibroDTO>> listarLibros(
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String titulo,
             @RequestParam(required = false) Long idCategoria,
+            @RequestParam(required = false) String nombreCategoria,          // <-- NUEVO
+            @RequestParam(required = false) Long idAutor,
+            @RequestParam(required = false) String nombresAutor,             // <-- NUEVO
+            @RequestParam(required = false) String primerApellidoAutor,      // <-- NUEVO
+            @RequestParam(required = false) String segundoApellidoAutor,     // <-- NUEVO
+            @RequestParam(required = false) Double minPrecio,
+            @RequestParam(required = false) Double maxPrecio,
             @RequestParam(required = false) String orderBy,
             @RequestParam(required = false, defaultValue = "asc") String orderMode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Slice<LibroDTO> librosSlice = libroService.listarLibros(keyword, idCategoria, orderBy, orderMode, pageable);
+
+        Slice<LibroDTO> librosSlice = libroService.listarLibros(
+                keyword, titulo, idCategoria, nombreCategoria, idAutor,
+                nombresAutor, primerApellidoAutor, segundoApellidoAutor,
+                minPrecio, maxPrecio, orderBy, orderMode, pageable
+        );
+
+        if (librosSlice == null || librosSlice.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(librosSlice, HttpStatus.OK);
     }
 

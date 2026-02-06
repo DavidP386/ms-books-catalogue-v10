@@ -3,6 +3,7 @@ package com.msbookscataloguev10.com.co.msbookscataloguev10.persistencia.reposito
 
 //IMPORTACIÓN DE LIBRERIAS:
 import com.msbookscataloguev10.com.co.msbookscataloguev10.persistencia.entity.Libro;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,11 +15,13 @@ import java.util.Optional;
  * @Autor PD04. HERNAN ADOLFO NUÑEZ GONZALEZ.
  * @Since 02/02/2026.
  * Declaración de la entidad.
- * @Actualizacion David Paez 04/02/2026.
+ * @Actualizacion David Paez 06/02/2026.
 * DECLARACIÓN DE LA CLASE INTERFACE DEL REPOSITORIO QUIEN ES EL QUE HACE EL ENLACE DIRECTO HACIA LA BASE DE DATOS.
 */
-public interface LibroRepository extends JpaRepository<Libro,Long> {
-    
+
+public interface LibroRepository extends JpaRepository<Libro,Long>,
+        JpaSpecificationExecutor<Libro> {
+
     //MÉTODO PARA BUSCAR LIBRO POR ID:
     Optional<Libro> findByIdLibro(Long idLibro);
     
