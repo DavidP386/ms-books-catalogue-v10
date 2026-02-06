@@ -38,6 +38,10 @@ public class InventarioController {
   public ResponseEntity<List<InventarioDTO>> listarKardex(@PathVariable Long idLibro) {
     List<InventarioDTO> inventarios = inventarioService.listarKardex(idLibro);
 
+    if(inventarios.isEmpty()){
+      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
     return new ResponseEntity<>(inventarios, HttpStatus.OK);
   }
 
@@ -49,9 +53,9 @@ public class InventarioController {
       @ApiResponse(responseCode = "200", description = "Entrada registrada correctamente")
   })
   @PostMapping("/entrada")
-  public ResponseEntity<Void> registrarEntrada(@RequestBody InventarioDTO inventarioDTO) {
+  public ResponseEntity<InventarioDTO> registrarEntrada(@RequestBody InventarioDTO inventarioDTO) {
     inventarioService.registrarEntrada(inventarioDTO);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(inventarioDTO);
   }
 
   @Operation(
