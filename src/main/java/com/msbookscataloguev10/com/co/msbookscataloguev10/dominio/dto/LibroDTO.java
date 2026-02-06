@@ -34,7 +34,7 @@ public class LibroDTO {
     private String formatoLibro;
     @Schema(description = "Nombre de archivo de imagen del libro.", example = "EJEMPLO: 1AWHKMN.jpg")
     private String nombreArchivoImagenLibro;
-    @Schema(description = "Estado del libro.", example = "EJEMPLO: ACTIVO/INACTIVO")
+    @Schema(description = "Estado del libro.", example = "EJEMPLO: ACTIVO/INACTIVO/VISIBLE")
     private String estadoLibro;
     
     private AutorDTO autorDTO;

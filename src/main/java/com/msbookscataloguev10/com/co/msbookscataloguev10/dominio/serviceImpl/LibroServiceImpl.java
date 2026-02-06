@@ -70,6 +70,36 @@ public class LibroServiceImpl implements LibroService {
         return libros.map(libro -> libroDAO.libroDTO(libro));
     }
     
+    //MÉTODO PARA LISTAR LIBROS POR CRITERIOS INDIVIDUALES Y COMBINADOS:
+    @Override
+    public Slice<LibroDTO> buscarLibrosPorCriterios(
+            String tituloLibro,
+            String fechaPublicacionLibro,
+            String sinopsisLibro,
+            String codigoIsbnLibro,
+            String precioLibro,
+            String formatoLibro,
+            String estadoLibro,
+            String orderBy,
+            String orderMode,
+            Pageable pageable) {
+            
+        Slice<Libro> libros = libroRepository.findLibrosByCriteriosIndividuales(
+                tituloLibro,
+                fechaPublicacionLibro,
+                sinopsisLibro,
+                codigoIsbnLibro,
+                precioLibro,
+                formatoLibro,
+                estadoLibro,
+                orderBy,
+                orderMode,
+                pageable
+        );
+        
+        return libros.map(libro -> libroDAO.libroDTO(libro));
+    }
+    
     //CREAR REGISTRO:
     @Override//SOBREESCRIBIMOS EL METODO DE CREAR REGISTRO.
     public RespuestaDTO crearLibro(LibroDTO libroDTO) {

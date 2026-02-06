@@ -26,9 +26,9 @@ public class MsBooksCataloguev10Application extends SpringBootServletInitializer
 }
 /*//DECLARACIÓN DE LA CLASE PRINCIPAL:
 @SpringBootApplication
-public class torresesingejcnacv10Application extends SpringBootServletInitializer {
+public class msbookscataloguev10Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(torresesingejcnacv10Application.class, args);
+		SpringApplication.run(msbookscataloguev10Application.class, args);
 	}
 }*/

@@ -22,11 +22,25 @@ public interface LibroService {
     //CREACIÓN, LECTURA (LISTAR Y CONSULTAR), EDICIÓN Y ELIMINACIÓN DE UN REGISTRO:
     //MÉTODO ÚNICO PARA LISTAR/FILTRAR/ORDENAR/PAGINAR LIBROS:
     Slice<LibroDTO> listarLibros(String keyword, Long idCategoria, String orderBy, String orderMode, Pageable pageable);
+    
+    //MÉTODO PARA BUSCAR LIBROS POR CRITERIOS INDIVIDUALES Y COMBINADOS:
+    Slice<LibroDTO> buscarLibrosPorCriterios(
+            String tituloLibro,
+            String fechaPublicacionLibro,
+            String sinopsisLibro,
+            String codigoIsbnLibro,
+            String precioLibro,
+            String formatoLibro,
+            String estadoLibro,
+            String orderBy,
+            String orderMode,
+            Pageable pageable
+    );
     RespuestaDTO crearLibro(LibroDTO libroDTO);
     RespuestaDTO consultarLibroporId(Long idLibro);
     RespuestaDTO actualizarLibro(LibroDTO libroDTO);
     RespuestaDTO eliminarLibro(Long idLibro);
-
+    
     //GESTIÓN DE RELACIÓN LIBRO - CATEGORIA:
     RespuestaDTO agregarCategoriaALibro(Long idLibro, Long idCategoria);
     RespuestaDTO eliminarCategoriaDeLibro(Long idLibro, Long idCategoria);

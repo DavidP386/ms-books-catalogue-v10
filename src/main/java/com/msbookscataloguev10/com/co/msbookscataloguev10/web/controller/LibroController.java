@@ -2,7 +2,6 @@
 package com.msbookscataloguev10.com.co.msbookscataloguev10.web.controller;
 
 //IMPORTACIÓN DE LIBRERIAS:
-import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.Constantes.MensajesConstantes;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.dto.RespuestaDTO;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.dto.LibroDTO;
 import com.msbookscataloguev10.com.co.msbookscataloguev10.dominio.service.LibroService;
@@ -43,6 +42,36 @@ public class LibroController {
         return new ResponseEntity<>(librosSlice, HttpStatus.OK);
     }
 
+    //ENDPOINT PARA LISTAR LIBROS POR CRITERIOS INDIVIDUALES Y COMBINADOS:
+    @GetMapping("/librosporCriteriosIndividualesyCombinados")
+    public ResponseEntity<Slice<LibroDTO>> listarLibrosPorCriterios(
+            @RequestParam(required = false) String tituloLibro,
+            @RequestParam(required = false) String fechaPublicacionLibro,
+            @RequestParam(required = false) String sinopsisLibro,
+            @RequestParam(required = false) String codigoIsbnLibro,
+            @RequestParam(required = false) String precioLibro,
+            @RequestParam(required = false) String formatoLibro,
+            @RequestParam(required = false) String estadoLibro,
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(required = false, defaultValue = "asc") String orderMode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Slice<LibroDTO> librosSlice = libroService.buscarLibrosPorCriterios(
+                tituloLibro,
+                fechaPublicacionLibro,
+                sinopsisLibro,
+                codigoIsbnLibro,
+                precioLibro,
+                formatoLibro,
+                estadoLibro,
+                orderBy,
+                orderMode,
+                pageable
+        );
+        return new ResponseEntity<>(librosSlice, HttpStatus.OK);
+    }
     
     //CREAR REGISTRO:
     @PostMapping("/libros")//DECLARACIÓN DEL MAPEO DEL CRUD CREAR REGISTRO.
@@ -79,8 +108,7 @@ public class LibroController {
         return new ResponseEntity<>(respuesta, httpStatus);
     }
 
-    //ENDPOINTS RELACIÓN LIBRO-CATEGORIA
-
+    //ENDPOINTS RELACIÓN LIBRO-CATEGORIA:
     @PostMapping("/libros/{idLibro}/categorias/{idCategoria}")
     public ResponseEntity<RespuestaDTO> agregarCategoriaALibro(@PathVariable Long idLibro, @PathVariable Long idCategoria) {
         RespuestaDTO respuesta = libroService.agregarCategoriaALibro(idLibro, idCategoria);
